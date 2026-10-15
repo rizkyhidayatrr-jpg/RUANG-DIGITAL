@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="id" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RUANG DIGITAL - Premium Apps Store</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome untuk Ikon -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Tailwind CSS (via CDN untuk mempermudah setup di VSCode & Apps Script) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Konfigurasi Tema Kustom -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Poppins', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            dark: '#0B1120',
+                            card: '#1E293B',
+                            primary: '#38BDF8',
+                            accent: '#818CF8',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- Custom CSS -->
+    <style>
+        body { background-color: #0B1120; color: #F8FAFC; overflow-x: hidden; }
+        .glass-nav { background: rgba(11, 17, 32, 0.85); backdrop-filter: blur(16px); border-bottom: 1px solid rgba(255,255,255,0.05); }
+        .gradient-text { background: linear-gradient(135deg, #38BDF8, #818CF8); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .product-card { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); border: 1px solid rgba(255,255,255,0.05); }
+        .product-card:hover { transform: translateY(-4px); border-color: rgba(56, 189, 248, 0.4); box-shadow: 0 10px 30px -10px rgba(56, 189, 248, 0.15); }
+        
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #0B1120; }
+        ::-webkit-scrollbar-thumb { background: #334155; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: #475569; }
+    </style>
+</head>
+<body class="antialiased min-h-screen flex flex-col selection:bg-brand-primary selection:text-white">
+
+    <!-- Navbar -->
+    <nav class="glass-nav fixed w-full z-50 top-0">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-20">
+                <!-- Logo -->
+                <div class="flex-shrink-0 flex items-center cursor-pointer group" onclick="window.scrollTo(0,0)">
+                    <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-brand-primary to-brand-accent flex items-center justify-center shadow-lg shadow-brand-primary/20 mr-3 group-hover:scale-105 transition-transform">
+                        <i class="fa-solid fa-rocket text-white text-xl"></i>
+                    </div>
+                    <span class="font-bold text-2xl tracking-tight">RUANG<span class="gradient-text">DIGITAL</span></span>
+                </div>
+
+                <!-- Nav Menu Desktop -->
+                <div class="hidden md:flex space-x-8 items-center font-medium">
+                    <a href="#kategori-kerja" class="text-gray-400 hover:text-white transition-colors">Kerja</a>
+                    <a href="#kategori-musik" class="text-gray-400 hover:text-white transition-colors">Musik</a>
+                    <a href="#kategori-streaming" class="text-gray-400 hover:text-white transition-colors">Streaming</a>
+                    <a href="#kategori-editing" class="text-gray-400 hover:text-white transition-colors">Editing</a>
+                </div>
+
+                <!-- Cart Button -->
+                <div class="flex items-center">
+                    <button onclick="toggleCart()" class="relative p-2 text-gray-300 hover:text-white transition-colors group bg-brand-card/50 hover:bg-brand-card rounded-xl border border-gray-800">
+                        <i class="fa-solid fa-cart-shopping text-xl p-1"></i>
+                        <span id="cart-badge" class="absolute -top-1 -right-1 inline-flex items-center justify-center w-5 h-5 text-[10px] font-bold text-white bg-red-500 rounded-full border-2 border-brand-dark hidden animate-pulse">0</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="flex-grow pt-20">
+        <!-- Hero Section -->
+        <section class="relative pt-16 pb-12 lg:pt-24 lg:pb-16 overflow-hidden">
+            <!-- Background Glow -->
+            <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-brand-primary/20 rounded-full blur-[120px] pointer-events-none"></div>
+            
+            <div class="relative z-10 max-w-7xl mx-auto px-4 text-center">
+                <h1 class="text-4xl md:text-6xl font-extrabold tracking-tight mb-6">
+                    Lengkapi Kebutuhan Digitalmu<br class="hidden md:block">
+                    <span class="gradient-text">Tanpa Bikin Kantong Kering</span>
+                </h1>
+                <p class="mt-4 max-w-2xl text-lg text-gray-400 mx-auto mb-10">
+                    Akun premium bergaransi untuk Hiburan, Produktivitas, dan Kreativitas. Proses instan & terpercaya.
+                </p>
+                <a href="#katalog" class="inline-flex items-center justify-center px-8 py-3.5 text-base font-semibold text-white bg-brand-primary hover:bg-blue-400 rounded-full shadow-lg shadow-brand-primary/25 transition-all hover:scale-105">
+                    Lihat Katalog Produk <i class="fa-solid fa-arrow-down ml-2"></i>
+                </a>
+            </div>
+        </section>
+
+        <!-- Product Catalog Section -->
+        <section id="katalog" class="py-12 pb-24">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                
+                <!-- Container Katalog (Akan diisi oleh Javascript) -->
+                <div id="product-container" class="space-y-16">
+                    <div class="text-center p-10">
+                        <i class="fa-solid fa-spinner fa-spin text-4xl text-brand-primary mb-4"></i>
+                        <p class="text-gray-400">Memuat katalog aplikasi premium...</p>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="border-t border-gray-800 bg-brand-dark py-8 mt-auto">
+        <div class="max-w-7xl mx-auto px-4 text-center">
+            <div class="inline-flex items-center justify-center space-x-2 mb-4">
+                <i class="fa-solid fa-rocket text-brand-primary"></i>
+                <span class="font-bold text-xl tracking-tight text-white">RUANG<span class="text-brand-primary">DIGITAL</span></span>
+            </div>
+            <p class="text-gray-500 text-sm">© 2026 Ruang Digital. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- ==================== KOMPONEN KERANJANG (CART UI) ==================== -->
+    <div id="cart-overlay" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-[100] hidden opacity-0 transition-opacity duration-300" onclick="toggleCart()"></div>
+    
+    <div id="cart-drawer" class="fixed top-0 right-0 h-full w-full sm:w-[400px] bg-brand-dark border-l border-gray-800 z-[101] transform translate-x-full transition-transform duration-300 flex flex-col shadow-2xl">
+        <!-- Cart Header -->
+        <div class="p-6 border-b border-gray-800 flex justify-between items-center bg-brand-card/50">
+            <h2 class="text-xl font-bold flex items-center">
+                <i class="fa-solid fa-bag-shopping text-brand-primary mr-3"></i> Keranjang
+            </h2>
+            <button onclick="toggleCart()" class="text-gray-400 hover:text-white bg-gray-800 hover:bg-gray-700 w-8 h-8 rounded-full flex items-center justify-center transition-colors">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+        </div>
+        
+        <!-- Cart Items Container -->
+        <div class="flex-grow overflow-y-auto p-4 custom-scrollbar">
+            <!-- Empty State -->
+            <div id="empty-cart-msg" class="h-full flex flex-col items-center justify-center text-gray-500 space-y-4">
+                <div class="w-20 h-20 bg-gray-800/50 rounded-full flex items-center justify-center">
+                    <i class="fa-solid fa-ghost text-4xl"></i>
+                </div>
+                <p class="font-medium">Keranjang masih kosong</p>
+                <button onclick="toggleCart()" class="text-sm text-brand-primary hover:underline">Belanja Sekarang</button>
+            </div>
+            <!-- Rendered Items -->
+            <div id="cart-items" class="space-y-3 hidden"></div>
+        </div>
+        
+        <!-- Cart Footer / Checkout -->
+        <div class="p-6 border-t border-gray-800 bg-brand-card">
+            <div class="flex justify-between items-center mb-6">
+                <span class="text-gray-400 font-medium">Total Harga</span>
+                <span class="text-2xl font-bold text-white tracking-tight" id="cart-total">Rp 0</span>
+            </div>
+            <button onclick="checkoutWhatsApp()" class="w-full bg-[#25D366] hover:bg-[#128C7E] text-white font-bold py-4 px-4 rounded-xl transition-colors shadow-lg shadow-[#25D366]/20 flex justify-center items-center gap-3 group">
+                <i class="fa-brands fa-whatsapp text-2xl group-hover:scale-110 transition-transform"></i> 
+                <span>Beli via WhatsApp</span>
+            </button>
+            <p class="text-center text-xs text-gray-500 mt-4"><i class="fa-solid fa-shield-halved mr-1"></i> Transaksi Aman & Instan</p>
+        </div>
+    </div>
+
+    <!-- Notification Toast -->
+    <div id="toast" class="fixed bottom-5 left-1/2 -translate-x-1/2 bg-brand-card border border-gray-700 text-white px-6 py-3 rounded-full shadow-2xl z-[110] transform translate-y-20 opacity-0 transition-all duration-300 flex items-center gap-3">
+        <i class="fa-solid fa-circle-check text-green-400 text-lg"></i>
+        <span id="toast-message" class="font-medium text-sm">Berhasil ditambahkan!</span>
+    </div>
+
+    <!-- ==================== JAVASCRIPT LOGIC ==================== -->
+    <script>
+        // Konfigurasi Nomor WhatsApp (Gunakan Format 62 Tanpa + atau 0)
+        const WA_NUMBER = "6285284333908"; 
+
+        // Daftar Katalog Produk Ruang Digital
+        const products = [
+            // --- KATEGORI KERJA ---
+            { id: 1, category: "Kerja", name: "MS Office", type: "1 Bulan", price: 12000, icon: "fa-brands fa-windows", iconColor: "text-blue-500" },
+            { id: 2, category: "Kerja", name: "Zoom Meet", type: "14 Hari", price: 14500, icon: "fa-solid fa-video", iconColor: "text-blue-400" },
+            { id: 3, category: "Kerja", name: "Zoom Meet", type: "30 Hari", price: 25000, icon: "fa-solid fa-video", iconColor: "text-blue-400" },
+
+            // --- KATEGORI MUSIK ---
+            { id: 4, category: "Musik", name: "Spotify", type: "1 Bln (Individual Full Garansi)", price: 21000, icon: "fa-brands fa-spotify", iconColor: "text-green-500" },
+            { id: 5, category: "Musik", name: "Spotify", type: "1 Bln (Student Acc)", price: 11000, icon: "fa-brands fa-spotify", iconColor: "text-green-500" },
+            { id: 6, category: "Musik", name: "Spotify", type: "1 Bln (Famplan)", price: 15500, icon: "fa-brands fa-spotify", iconColor: "text-green-500" },
+            { id: 7, category: "Musik", name: "Spotify", type: "2 Bln (Full Garansi)", price: 35000, icon: "fa-brands fa-spotify", iconColor: "text-green-500" },
+            { id: 8, category: "Musik", name: "Spotify", type: "2 Bln (Garansi 1x24 Jam)", price: 16000, icon: "fa-brands fa-spotify", iconColor: "text-green-500" },
+            { id: 9, category: "Musik", name: "Apple Music", type: "Famhead 1 Bulan", price: 22000, icon: "fa-brands fa-apple", iconColor: "text-gray-200" },
+            { id: 10, category: "Musik", name: "Apple Music", type: "Individual 1 Bulan", price: 15000, icon: "fa-brands fa-apple", iconColor: "text-gray-200" },
+
+            // --- KATEGORI STREAMING ---
+            { id: 11, category: "Streaming", name: "Netflix", type: "1 Bulan (IP 1U)", price: 45000, icon: "fa-solid fa-n", iconColor: "text-red-600" },
+            { id: 12, category: "Streaming", name: "Netflix", type: "1 Bulan (1P 2U)", price: 30000, icon: "fa-solid fa-n", iconColor: "text-red-600" },
+            { id: 13, category: "Streaming", name: "Disney+", type: "1 Bulan", price: 23000, icon: "fa-solid fa-plus", iconColor: "text-blue-500" },
+            { id: 14, category: "Streaming", name: "Loklok", type: "1 Bulan", price: 10000, icon: "fa-solid fa-film", iconColor: "text-yellow-400" },
+            { id: 15, category: "Streaming", name: "Bstation", type: "1 Minggu", price: 10500, icon: "fa-solid fa-tv", iconColor: "text-blue-300" },
+            { id: 16, category: "Streaming", name: "Vidio Platinum", type: "Mobile 1 Bulan", price: 35000, icon: "fa-solid fa-play", iconColor: "text-red-500" },
+            { id: 17, category: "Streaming", name: "Vidio Platinum", type: "TV Only 1 Bulan", price: 16000, icon: "fa-solid fa-play", iconColor: "text-red-500" },
+            { id: 18, category: "Streaming", name: "Viu", type: "12 Bulan (Garansi 1 Bln)", price: 8500, icon: "fa-solid fa-circle-play", iconColor: "text-yellow-500" },
+            { id: 19, category: "Streaming", name: "Viu", type: "6 Bulan (Garansi 1 Bln)", price: 6500, icon: "fa-solid fa-circle-play", iconColor: "text-yellow-500" },
+            { id: 20, category: "Streaming", name: "Viu", type: "3 Bulan (Garansi 1 Bln)", price: 5500, icon: "fa-solid fa-circle-play", iconColor: "text-yellow-500" },
+            { id: 21, category: "Streaming", name: "Viu", type: "Life Time", price: 12000, icon: "fa-solid fa-circle-play", iconColor: "text-yellow-500" },
+
+            // --- KATEGORI EDITING ---
+            { id: 22, category: "Editing", name: "Canva Pro", type: "1 Bulan Head Acc", price: 18000, icon: "fa-solid fa-pen-nib", iconColor: "text-cyan-400" },
+            { id: 23, category: "Editing", name: "Canva Pro", type: "Member Life Time", price: 22000, icon: "fa-solid fa-pen-nib", iconColor: "text-cyan-400" },
+            { id: 24, category: "Editing", name: "Canva Pro", type: "Eduhead Garansi (500 Mbr)", price: 52000, icon: "fa-solid fa-pen-nib", iconColor: "text-cyan-400" },
+            { id: 25, category: "Editing", name: "Canva Pro", type: "Via Invite (Akun Buyer)", price: 12000, icon: "fa-solid fa-pen-nib", iconColor: "text-cyan-400" },
+            { id: 26, category: "Editing", name: "Alight Motion", type: "1 Tahun (Garansi 6 Bln)", price: 7000, icon: "fa-solid fa-wand-magic-sparkles", iconColor: "text-purple-400" }
+        ];
+
+        let cart = [];
+
+        // Format Rupiah
+        const formatRupiah = (angka) => {
+            return "Rp " + angka.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+        };
+
+        // Render Produk Berdasarkan Kategori
+        function renderProducts() {
+            const container = document.getElementById('product-container');
+            const categories = ["Kerja", "Musik", "Streaming", "Editing"];
+            
+            let htmlContent = "";
+
+            categories.forEach(cat => {
+                // Filter produk sesuai kategori
+                const categoryProducts = products.filter(p => p.category === cat);
+                
+                if(categoryProducts.length > 0) {
+                    htmlContent += `
+                        <div id="kategori-${cat.toLowerCase()}" class="scroll-mt-24">
+                            <div class="flex items-center gap-4 mb-6">
+                                <h2 class="text-2xl font-bold text-white uppercase tracking-wider">${cat}</h2>
+                                <div class="flex-grow h-px bg-gradient-to-r from-gray-700 to-transparent"></div>
+                            </div>
+                            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+                    `;
+                    
+                    categoryProducts.forEach(product => {
+                        htmlContent += `
+                            <div class="product-card bg-brand-card rounded-2xl p-5 flex flex-col h-full relative overflow-hidden group">
+                                <div class="absolute top-0 right-0 w-20 h-20 bg-gray-700/10 rounded-bl-[100px] -z-10 group-hover:bg-brand-primary/10 transition-colors"></div>
+                                
+                                <div class="flex justify-between items-start mb-4">
+                                    <div class="w-12 h-12 rounded-xl bg-brand-dark border border-gray-700/50 flex items-center justify-center text-2xl shadow-inner">
+                                        <i class="${product.icon} ${product.iconColor}"></i>
+                                    </div>
+                                    <div class="text-right">
+                                        <span class="inline-block px-3 py-1 bg-brand-dark/80 text-gray-300 text-[11px] font-semibold rounded-full border border-gray-700/50 uppercase tracking-wide">
+                                            ${product.type}
+                                        </span>
+                                    </div>
+                                </div>
+                                
+                                <h3 class="text-lg font-bold text-white mb-1 leading-tight group-hover:text-brand-primary transition-colors">${product.name}</h3>
+                                <p class="text-xl font-extrabold text-white tracking-tight mb-5">${formatRupiah(product.price)}</p>
+                                
+                                <div class="mt-auto">
+                                    <button onclick="addToCart(${product.id})" class="w-full bg-brand-dark hover:bg-brand-primary border border-gray-700 hover:border-brand-primary text-gray-300 hover:text-white font-semibold py-2.5 rounded-xl transition-all flex justify-center items-center gap-2 group-hover:shadow-lg group-hover:shadow-brand-primary/20">
+                                        <i class="fa-solid fa-cart-plus"></i> Tambah
+                                    </button>
+                                </div>
+                            </div>
+                        `;
+                    });
+
+                    htmlContent += `</div></div>`;
+                }
+            });
+
+            container.innerHTML = htmlContent;
+        }
+
+        // --- SISTEM KERANJANG ---
+        
+        function addToCart(productId) {
+            const product = products.find(p => p.id === productId);
+            if (!product) return;
+
+            const existingItem = cart.find(item => item.id === productId);
+            if (existingItem) {
+                existingItem.qty += 1;
+            } else {
+                cart.push({ ...product, qty: 1 });
+            }
+            
+            updateCartUI();
+            showToast(`${product.name} (${product.type}) ditambahkan!`);
+        }
+
+        function updateQty(productId, change) {
+            const itemIndex = cart.findIndex(item => item.id === productId);
+            if (itemIndex !== -1) {
+                cart[itemIndex].qty += change;
+                if (cart[itemIndex].qty <= 0) {
+                    cart.splice(itemIndex, 1);
+                }
+                updateCartUI();
+            }
+        }
+
+        function removeFromCart(productId) {
+            cart = cart.filter(item => item.id !== productId);
+            updateCartUI();
+        }
+
+        function updateCartUI() {
+            const cartItemsContainer = document.getElementById('cart-items');
+            const emptyMsg = document.getElementById('empty-cart-msg');
+            const badge = document.getElementById('cart-badge');
+            const totalEl = document.getElementById('cart-total');
+
+            const totalItems = cart.reduce((sum, item) => sum + item.qty, 0);
+            
+            // Badge Update
+            if (totalItems > 0) {
+                badge.textContent = totalItems;
+                badge.classList.remove('hidden');
+            } else {
+                badge.classList.add('hidden');
+            }
+
+            // View Update
+            if (cart.length === 0) {
+                emptyMsg.style.display = "flex";
+                cartItemsContainer.classList.add('hidden');
+                totalEl.textContent = "Rp 0";
+                return;
+            }
+
+            emptyMsg.style.display = "none";
+            cartItemsContainer.classList.remove('hidden');
+            
+            let totalPrice = 0;
+            let cartHtml = "";
+
+            cart.forEach(item => {
+                const subtotal = item.price * item.qty;
+                totalPrice += subtotal;
+                
+                cartHtml += `
+                    <div class="bg-brand-dark p-3 rounded-xl border border-gray-800 flex gap-3 relative overflow-hidden group">
+                        <!-- Icon -->
+                        <div class="w-12 h-12 rounded-lg bg-gray-800 flex-shrink-0 flex items-center justify-center">
+                            <i class="${item.icon} ${item.iconColor} text-xl"></i>
+                        </div>
+                        
+                        <!-- Details -->
+                        <div class="flex-grow min-w-0">
+                            <h4 class="font-bold text-sm text-white truncate pr-6">${item.name}</h4>
+                            <p class="text-[11px] text-gray-400 truncate mb-1">${item.type}</p>
+                            <p class="text-brand-primary font-semibold text-sm">${formatRupiah(subtotal)}</p>
+                        </div>
+                        
+                        <!-- Actions -->
+                        <div class="flex flex-col justify-between items-end">
+                            <button onclick="removeFromCart(${item.id})" class="text-gray-500 hover:text-red-400 transition-colors h-5">
+                                <i class="fa-solid fa-trash-can text-xs"></i>
+                            </button>
+                            <div class="flex items-center bg-gray-800 rounded-md border border-gray-700">
+                                <button onclick="updateQty(${item.id}, -1)" class="w-6 h-6 flex items-center justify-center text-gray-400 hover:text-white hover:bg-gray-700 rounded-l-md transition-colors">-</button>
+                                <span class="w-6 text-center text-xs font-bold">${item.qty}</span>
+                                <button onclick="updateQty(${item.id}, 1)" class="w-6 h-6 flex items-center justify-center text-gray-400 hover:text-white hover:bg-gray-700 rounded-r-md transition-colors">+</button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+
+            cartItemsContainer.innerHTML = cartHtml;
+            totalEl.textContent = formatRupiah(totalPrice);
+        }
+
+        // Toggle UI Sidebar
+        function toggleCart() {
+            const overlay = document.getElementById('cart-overlay');
+            const drawer = document.getElementById('cart-drawer');
+            
+            if (overlay.classList.contains('hidden')) {
+                // Buka
+                overlay.classList.remove('hidden');
+                // Beri sedikit delay agar transisi jalan
+                setTimeout(() => {
+                    overlay.classList.remove('opacity-0');
+                    drawer.classList.remove('translate-x-full');
+                }, 10);
+            } else {
+                // Tutup
+                drawer.classList.add('translate-x-full');
+                overlay.classList.add('opacity-0');
+                setTimeout(() => {
+                    overlay.classList.add('hidden');
+                }, 300);
+            }
+        }
+
+        // Toast Notification
+        let toastTimeout;
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            document.getElementById('toast-message').textContent = message;
+            
+            toast.classList.remove('translate-y-20', 'opacity-0');
+            
+            clearTimeout(toastTimeout);
+            toastTimeout = setTimeout(() => {
+                toast.classList.add('translate-y-20', 'opacity-0');
+            }, 3000);
+        }
+
+        // WhatsApp Checkout
+        function checkoutWhatsApp() {
+            if (cart.length === 0) return;
+
+            let textWA = "Halo Admin *Ruang Digital* 👋\nSaya ingin memesan aplikasi berikut:\n\n";
+            let total = 0;
+            
+            textWA += "---------------------------------\n";
+            cart.forEach((item, idx) => {
+                const subtotal = item.price * item.qty;
+                total += subtotal;
+                textWA += `*${idx + 1}. ${item.name}*\n`;
+                textWA += ` └ Varian: ${item.type}\n`;
+                textWA += ` └ Jumlah: ${item.qty} x ${formatRupiah(item.price)}\n`;
+                textWA += ` └ Subtotal: ${formatRupiah(subtotal)}\n\n`;
+            });
+            textWA += "---------------------------------\n";
+            textWA += `*TOTAL TAGIHAN : ${formatRupiah(total)}*\n\n`;
+            textWA += "Mohon panduan untuk proses pembayarannya. Terima kasih!";
+
+            const encodedText = encodeURIComponent(textWA);
+            const waLink = `https://wa.me/${WA_NUMBER}?text=${encodedText}`;
+            
+            window.open(waLink, '_blank');
+        }
+
+        // Initialize Web
+        document.addEventListener('DOMContentLoaded', () => {
+            renderProducts();
+        });
+    </script>
+</body>
+</html>
